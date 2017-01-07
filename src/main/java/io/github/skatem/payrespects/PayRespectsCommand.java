@@ -20,7 +20,7 @@
 package io.github.skatem.payrespects;
 
 /**
- * Created by mitch on 1/5/2017.
+ * Created by Mitch on 1/5/2017.
  */
 
 import org.spongepowered.api.Sponge;
@@ -38,17 +38,19 @@ import org.spongepowered.api.text.Text;
 public class PayRespectsCommand implements CommandExecutor{
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+        //Player pays respects
         if(src instanceof Player) {
             Player player = (Player) src;
-            Sponge.getServer().getBroadcastChannel().send(Text.of(player.getName() + "pays their respects."));
+            Sponge.getServer().getBroadcastChannel().send(Text.of(player.getName() + " pays their respects."));
         }
+        //Server pays respects
         else if(src instanceof ConsoleSource) {
             Sponge.getServer().getBroadcastChannel().send(Text.of("The Server pays its respects."));
         }
+        //Command block pays respects
         else if(src instanceof CommandBlockSource) {
             Sponge.getServer().getBroadcastChannel().send(Text.of("A humble command block pays its respects."));
         }
-
     return CommandResult.success();
     }
 }
