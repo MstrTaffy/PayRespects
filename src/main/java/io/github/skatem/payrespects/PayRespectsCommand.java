@@ -19,10 +19,6 @@
 
 package io.github.skatem.payrespects;
 
-/**
- * Created by Mitch on 1/5/2017.
- **/
-
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
@@ -33,6 +29,7 @@ import org.spongepowered.api.command.source.ConsoleSource;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.format.TextColors;
 
 import java.time.Duration;
 import java.util.HashMap;
@@ -42,26 +39,31 @@ import java.util.Map;
 
 public class PayRespectsCommand implements CommandExecutor{
     private int cooldown;
-    private UUID playerUUID;
     private Map<UUID, Instant> playerMap = new HashMap<>();
+
+    public PayRespectsCommand(PayRespects pr) {
+        cooldown = pr.getCooldown();
+    }
 
     @Override
     public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         //Player pays respects
         if(src instanceof Player) {
             Player player = (Player) src;
+            UUID playerUUID;
             playerUUID = player.getUniqueId();
 
             if (playerMap.containsKey(playerUUID)) {
                 if (Duration.between(playerMap.get(playerUUID), Instant.now()).getSeconds() <= cooldown) {
-                    player.sendMessage(Text.of("Command on cooldown!"));
+                    player.sendMessage(Text.of(TextColors.DARK_GRAY, "Command on cooldown!"));
                 } else {
                     Sponge.getServer().getBroadcastChannel().send(Text.of(player.getName() + " pays their respects."));
+                    playerMap.put(playerUUID, Instant.now());
                 }
             } else {
                 Sponge.getServer().getBroadcastChannel().send(Text.of(player.getName() + " pays their respects."));
+                playerMap.put(playerUUID, Instant.now());
             }
-            playerMap.put(playerUUID, Instant.now());
 
         }
         //Server pays respects
@@ -73,9 +75,5 @@ public class PayRespectsCommand implements CommandExecutor{
             Sponge.getServer().getBroadcastChannel().send(Text.of("A humble command block pays its respects."));
         }
     return CommandResult.success();
-    }
-
-    public PayRespectsCommand(PayRespects pr) {
-        cooldown = pr.getCooldown();
     }
 }

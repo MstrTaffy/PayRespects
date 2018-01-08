@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017  Skatem
+ * Copyright (C) 2018  Skatem
  *
  * This file is part of PayRespects.
  *
@@ -30,6 +30,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
+import org.spongepowered.api.event.game.state.GameStartedServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
@@ -41,7 +42,6 @@ import java.nio.file.Path;
 @Plugin(
         id = "payrespects",
         name = "PayRespects",
-        version = "1.0.2",
         description = "Type /f to pay respects when a player dies.",
         authors = {
                 "skatem"
@@ -50,7 +50,6 @@ import java.nio.file.Path;
 public class PayRespects {
     @Inject
     private Logger logger;
-    private int cooldown;
 
     @Inject
     @DefaultConfig(sharedRoot = true)
@@ -59,14 +58,11 @@ public class PayRespects {
     @Inject
     private PluginContainer instance;
 
+    private int cooldown;
+
     //build command
     @Listener
-    public void  OnGameInit(GameInitializationEvent event) {
-        CommandSpec PayRespectsCommand = CommandSpec.builder()
-                .description(Text.of("Pay Respects Command"))
-                .permission("payrespects.commands.pr")
-                .executor(new PayRespectsCommand(this))
-                .build();
+    public void onGameInit(GameInitializationEvent event) {
 
         ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(defaultConfig).build();
 
@@ -89,13 +85,30 @@ public class PayRespects {
             logger.error("Error loading config! Error: " + e.getMessage());
         }
 
+        CommandSpec PayRespectsCommand = CommandSpec.builder()
+                .description(Text.of("Pay Respects Command"))
+                .permission("payrespects.commands.pr")
+                .executor(new PayRespectsCommand(this))
+                .build();
 
         //executes when player types '/f' or '/PayRespects'
         Sponge.getCommandManager().register(this, PayRespectsCommand, "f", "payrespects");
     }
 
+
+    @Listener
+    public void onServerStart(GameStartedServerEvent event) {
+        getLogger().info(
+                instance.getName() + " version " + instance.getVersion().orElse("")
+                        + " enabled!");
+    }
+
     public int getCooldown() {
         return cooldown;
+    }
+
+    public Logger getLogger() {
+        return logger;
     }
 
     public PluginContainer getInstance() {
