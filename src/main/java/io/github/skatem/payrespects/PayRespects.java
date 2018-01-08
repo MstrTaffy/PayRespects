@@ -103,6 +103,7 @@ public class PayRespects {
                         + " enabled!");
     }
 
+
     public int getCooldown() {
         return cooldown;
     }
