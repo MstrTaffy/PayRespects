@@ -1,5 +1,5 @@
 # PayRespects
-A minecraft sponge plugin.
+A Sponge plugin for Minecraft.
 
 Type "/f" to pay your respects when a player dies.
 ##Commands
