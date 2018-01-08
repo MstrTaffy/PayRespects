@@ -2,8 +2,8 @@
 A Sponge plugin for Minecraft.
 
 Type "/f" to pay your respects when a player dies.
-##Commands
-`/f` or `/PayRespects`
+## Commands
+`/f` or `/payrespects`
 
-##Permissions
+## Permissions
 `payrespects.commands.pr`

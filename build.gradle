@@ -1,29 +1,30 @@
 /*
- * Copyright (C) 2017  Skatem
+ * Copyright (C) 2018  Skatem
  *
  * This file is part of PayRespects.
  *
- * PayRespects is free software: you can redistribute it and/or modify
+ * NoMobFarm is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * the Free Software Foundation, either version 2 of the License, or
  * (at your option) any later version.
  *
- * PayRespects is distributed in the hope that it will be useful,
+ * NoMobFarm is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with PayRespects.  If not, see <http://www.gnu.org/licenses/>.
+ * along with NoMobFarm.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 plugins {
-    id 'org.spongepowered.plugin' version '0.7'
+    id 'org.spongepowered.plugin' version '0.8.1'
     id 'java'
-    id "com.qixalite.spongestart" version "1.5.2"
+    id "com.qixalite.spongestart" version "1.6.2"
 }
 
-group 'io.github.skatem'
+group 'io.github.mpalmer7'
+version '1.0.0'
 
 repositories {
     mavenCentral()
@@ -33,14 +34,13 @@ repositories {
     }
 }
 
-spongestart {
+spongestart{
     eula true
 
-    //optional configs
-    spongeVanillaBuild '1.10.2-5.1.0-BETA-366'
-    vanillaServerFolder 'run/vanilla'
+    minecraft '1.12.2'
+    type 'stable'
 }
 
 dependencies {
-    compile 'org.spongepowered:spongeapi:5.0.0'
+    compile 'org.spongepowered:spongeapi:7.0.0'
 }

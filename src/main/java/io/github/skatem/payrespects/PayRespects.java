@@ -20,13 +20,23 @@
 package io.github.skatem.payrespects;
 
 import com.google.inject.Inject;
+import ninja.leaping.configurate.commented.CommentedConfigurationNode;
+import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
+import ninja.leaping.configurate.loader.ConfigurationLoader;
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.asset.Asset;
 import org.spongepowered.api.command.spec.CommandSpec;
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.game.state.GameInitializationEvent;
 import org.spongepowered.api.plugin.Plugin;
+import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.Text;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
 
 @Plugin(
         id = "payrespects",
@@ -40,6 +50,14 @@ import org.spongepowered.api.text.Text;
 public class PayRespects {
     @Inject
     private Logger logger;
+    private int cooldown;
+
+    @Inject
+    @DefaultConfig(sharedRoot = true)
+    private Path defaultConfig;
+
+    @Inject
+    private PluginContainer instance;
 
     //build command
     @Listener
@@ -47,9 +65,40 @@ public class PayRespects {
         CommandSpec PayRespectsCommand = CommandSpec.builder()
                 .description(Text.of("Pay Respects Command"))
                 .permission("payrespects.commands.pr")
-                .executor(new PayRespectsCommand())
+                .executor(new PayRespectsCommand(this))
                 .build();
+
+        ConfigurationLoader<CommentedConfigurationNode> configLoader = HoconConfigurationLoader.builder().setPath(defaultConfig).build();
+
+        // Generate default config if it doesn't exist
+        if (!defaultConfig.toFile().exists()) {
+            Asset defaultConfigAsset = getInstance().getAsset("DefaultConfig.conf").get();
+            try {
+                defaultConfigAsset.copyToFile(defaultConfig);
+                configLoader.save(configLoader.load());
+            } catch (IOException e) {
+                logger.warn("Error loading default config! Error: " + e.getMessage());
+            }
+        }
+
+        try {
+            CommentedConfigurationNode configNode = configLoader.load();
+            configNode = configLoader.load();
+            cooldown = configNode.getNode("cooldown").getInt();
+        } catch (IOException e) {
+            logger.error("Error loading config! Error: " + e.getMessage());
+        }
+
+
         //executes when player types '/f' or '/PayRespects'
-        Sponge.getCommandManager().register(this, PayRespectsCommand, "f", "PayRespects");
+        Sponge.getCommandManager().register(this, PayRespectsCommand, "f", "payrespects");
+    }
+
+    public int getCooldown() {
+        return cooldown;
+    }
+
+    public PluginContainer getInstance() {
+        return instance;
     }
 }
