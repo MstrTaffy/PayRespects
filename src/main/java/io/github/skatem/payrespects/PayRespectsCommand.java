@@ -37,9 +37,8 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PayRespectsCommand implements CommandExecutor{
-    private int cooldown;
     private Map<UUID, Instant> playerMap = new HashMap<>();
-
+    private int cooldown;
     public PayRespectsCommand(PayRespects pr) {
         cooldown = pr.getCooldown();
     }
