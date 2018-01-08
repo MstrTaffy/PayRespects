@@ -20,7 +20,6 @@
 package io.github.skatem.payrespects;
 
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -32,10 +31,10 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.UUID;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class PayRespectsCommand implements CommandExecutor{
     private int cooldown;
@@ -46,12 +45,11 @@ public class PayRespectsCommand implements CommandExecutor{
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
+    public CommandResult execute(CommandSource src, CommandContext args) {
         //Player pays respects
         if(src instanceof Player) {
             Player player = (Player) src;
-            UUID playerUUID;
-            playerUUID = player.getUniqueId();
+            UUID playerUUID = player.getUniqueId();
 
             if (playerMap.containsKey(playerUUID)) {
                 if (Duration.between(playerMap.get(playerUUID), Instant.now()).getSeconds() <= cooldown) {
@@ -74,6 +72,6 @@ public class PayRespectsCommand implements CommandExecutor{
         else if(src instanceof CommandBlockSource) {
             Sponge.getServer().getBroadcastChannel().send(Text.of("A humble command block pays its respects."));
         }
-    return CommandResult.success();
+        return CommandResult.success();
     }
 }
