@@ -68,7 +68,7 @@ public class PayRespects {
 
         // Generate default config if it doesn't exist
         if (!defaultConfig.toFile().exists()) {
-            Asset defaultConfigAsset = getInstance().getAsset("DefaultConfig.conf").get();
+            Asset defaultConfigAsset = getInstance().getAsset("defaultConfig.conf").get();
             try {
                 defaultConfigAsset.copyToFile(defaultConfig);
                 configLoader.save(configLoader.load());
